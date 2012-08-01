@@ -49,7 +49,9 @@ public class MainActivity extends Activity {
 //        ListAdapter listAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_expandable_list_item_1, 
 //        		cursor, new String[]{MyDatabaseHelper.MESSAGE_COLUME, MyDatabaseHelper.NAME_COLUME}, new int[]{android.R.id.text1, android.R.id.text2});
         ListAdapter listAdapter = new SimpleCursorAdapter(this, R.layout.msg_item, 
-        		cursor, new String[]{"_id", MyDatabaseHelper.NAME_COLUME, MyDatabaseHelper.MESSAGE_COLUME}, new int[]{R.id.textView3, R.id.textView1, R.id.textView2});
+        		cursor, new String[]{"_id", MyDatabaseHelper.NAME_COLUME, MyDatabaseHelper.MESSAGE_COLUME}, new int[]{R.id.textView3, R.id.textView1, R.id.textView2}){
+        	
+       };
 
         m_ListView.setAdapter(listAdapter);
 		setContentView(m_ListView);
