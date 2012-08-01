@@ -14,8 +14,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         
-        <provider android:name="MyContentProvider"
-            android:authorities="com.gengzy.myfirstapp.providerd" />
+        <!-- provider android:name="MyContentProvider"
+            android:authorities="com.gengzy.myfirstapp.providerd" /-->
         
         <activity
             android:name=".MainActivity"
