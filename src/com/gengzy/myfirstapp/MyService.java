@@ -3,6 +3,8 @@ package com.gengzy.myfirstapp;
 import java.lang.ref.WeakReference;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 //import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -62,6 +64,10 @@ public class MyService extends Service{
 		Looper looper = thread.getLooper();
 		m_handler = new MyServiceHandler(looper);
 		m_handler.setService(this);
+		
+		BroadcastReceiver broadcastReceiver = new MyBroadcast();
+		IntentFilter intentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
+		this.registerReceiver(broadcastReceiver, intentFilter);
 		
 		super.onCreate();
 	}

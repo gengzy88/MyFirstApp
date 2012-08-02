@@ -17,6 +17,7 @@ public class MyBroadcast extends BroadcastReceiver{
 		// TODO Auto-generated method stub
 		m_databaseHelper = MyDatabaseHelper.getMyDatabaseHelper(context);
 		SQLiteDatabase db = m_databaseHelper.getWritableDatabase();
+//		db.beginTransaction();
 		
 		Bundle bundle = intent.getExtras();
 		Object messageObject[] = (Object[])bundle.get("pdus");
@@ -32,7 +33,7 @@ public class MyBroadcast extends BroadcastReceiver{
 			
 			contentValues.put(MyDatabaseHelper.NAME_COLUME, no);
 			contentValues.put(MyDatabaseHelper.MESSAGE_COLUME, smsContent);
-			db.insert(MyDatabaseHelper.MYTABLENAME, null, contentValues);
+			long id = db.insert(MyDatabaseHelper.MYTABLENAME, null, contentValues);
 			
 			Intent intent2 = new Intent();
 //			intent2.setClass(context, MainActivity.class);
@@ -44,5 +45,7 @@ public class MyBroadcast extends BroadcastReceiver{
 			abortBroadcast();
 			Toast.makeText(context, smsContent, Toast.LENGTH_SHORT).show();
 		}
+//		db.endTransaction();
+//		db.setTransactionSuccessful();
 	}
 }

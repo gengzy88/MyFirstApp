@@ -8,6 +8,7 @@
         android:id="@+id/textView3"
         android:layout_width="20dp"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:text="TextView" />
     
     <TextView
@@ -18,10 +19,16 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:text="Large Text"
         android:onClick="onClickMsg"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <Button android:id="@+id/itemButton"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Large Text"
+        android:onClick="onClickMsg"/>"
 
 </LinearLayout>

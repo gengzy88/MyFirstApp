@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,6 +44,7 @@ public class MainActivity extends Activity {
 			}
         	
         };
+        
         Cursor cursor = MyDatabaseHelper.getMyDatabaseHelper(this).getReadableDatabase().rawQuery("select * from " + MyDatabaseHelper.MYTABLENAME, null);
         startManagingCursor(cursor);
         
@@ -55,17 +57,28 @@ public class MainActivity extends Activity {
 
         m_ListView.setAdapter(listAdapter);
 		setContentView(m_ListView);
-		MyDatabaseHelper.getMyDatabaseHelper(this).getReadableDatabase().rawQuery("select * from " + MyDatabaseHelper.MYTABLENAME, null);
+		MyDatabaseHelper.getMyDatabaseHelper(this).close();
+		//MyDatabaseHelper.getMyDatabaseHelper(this).getReadableDatabase().rawQuery("select * from " + MyDatabaseHelper.MYTABLENAME, null);
     }
 
     public void onClickMsg(View v) {
-    	String string = (String) ((TextView)v).getText();
-    	MyDatabaseHelper.getMyDatabaseHelper(this).getWritableDatabase().rawQuery("delete from " + MyDatabaseHelper.MYTABLENAME + "where _id = " + Integer.parseInt(string), null);
-    	MyDatabaseHelper.getMyDatabaseHelper(this).notifyAll();
+    	int pos = m_ListView.getPositionForView(v);
+    	SQLiteDatabase db = MyDatabaseHelper.getMyDatabaseHelper(this).getWritableDatabase();
+    	TextView textView = (TextView)m_ListView.findFocus().findViewById(R.id.textView3);
+    	String string = (String) textView.getText();
+    	String sqlString = "delete from " + MyDatabaseHelper.MYTABLENAME + " where _id = " + string;
+//    	db.beginTransaction();
+    	db.delete(MyDatabaseHelper.MYTABLENAME, "_id = " + string, null);
+//   	db.rawQuery(sqlString, null);
+//    	db.endTransaction();
+//    	db.setTransactionSuccessful();
+    	MyDatabaseHelper.getMyDatabaseHelper(this).close();
+//    	MyDatabaseHelper.getMyDatabaseHelper(this).notifyAll();
     	Intent intent = getIntent();
-    	intent.setClass(this, MainActivity.class);
+    	intent.setClass(this, MyService.class);
     	finish();
-    	startActivity(intent);
+    	startService(intent);
+    	
     	
     }
     @Override
