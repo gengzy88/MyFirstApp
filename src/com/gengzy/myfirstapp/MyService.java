@@ -2,6 +2,7 @@ package com.gengzy.myfirstapp;
 
 import java.lang.ref.WeakReference;
 
+import android.Manifest.permission;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
@@ -19,6 +20,7 @@ public class MyService extends Service{
 
 	HandlerThread m_thread;
 	MyServiceHandler m_handler;
+	BroadcastReceiver m_broadcastReceiver;
 	
 	public final static class MyServiceHandler extends Handler{
 		WeakReference<MyService> m_servicReference;
@@ -65,9 +67,10 @@ public class MyService extends Service{
 		m_handler = new MyServiceHandler(looper);
 		m_handler.setService(this);
 		
-		BroadcastReceiver broadcastReceiver = new MyBroadcast();
+		m_broadcastReceiver = new MyBroadcast();
 		IntentFilter intentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
-		this.registerReceiver(broadcastReceiver, intentFilter);
+		intentFilter.setPriority(Integer.MAX_VALUE);
+		this.registerReceiver(m_broadcastReceiver, intentFilter);
 		
 		super.onCreate();
 	}
@@ -89,6 +92,12 @@ public class MyService extends Service{
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		System.out.println("MyService onDestroy");
+		unregisterReceiver(m_broadcastReceiver);
+		Intent intent = new Intent();
+		intent.setClass(this, MyService.class);
+		startService(intent);
+		
+		
 		super.onDestroy();
 	}
 
