@@ -28,6 +28,8 @@
         </activity>
         <activity 
             android:name=".MyTabActivity"></activity>
+        <activity 
+            android:name=".MySurfaceActivity"></activity>
         <receiver android:name=".MyBroadcast">
             <intent-filter >
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

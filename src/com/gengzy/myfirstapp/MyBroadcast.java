@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.telephony.SmsMessage;
 import android.widget.Toast;
 
@@ -20,6 +22,16 @@ public class MyBroadcast extends BroadcastReceiver{
 //		db.beginTransaction();
 		
 		Bundle bundle = intent.getExtras();
+		
+		Handler handler = MyService.getMyServiceHandler();
+		if(null == handler){
+			return;
+		}
+		Message message = Message.obtain();
+		message.what = MyService.RECV_MSG;
+		message.obj = bundle;
+		handler.sendMessage(message);
+		//message.
 		Object messageObject[] = (Object[])bundle.get("pdus");
 		int length = messageObject.length;
 		for (int i = 0; i < length; ++i) {
@@ -27,7 +39,7 @@ public class MyBroadcast extends BroadcastReceiver{
 			SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) messageObject[i]);
 			String smsContent = smsMessage.getMessageBody();
 			String no = smsMessage.getOriginatingAddress();
-			
+			SystemClock.sleep(5000);
 //			Message message = Message.obtain();
 //			message.setData(bundle);
 			
@@ -43,7 +55,8 @@ public class MyBroadcast extends BroadcastReceiver{
 			context.startService(intent2);
 			
 			abortBroadcast();
-			Toast.makeText(context, smsContent, Toast.LENGTH_SHORT).show();
+			
+			//Toast.makeText(context, smsContent, Toast.LENGTH_SHORT).show();
 		}
 //		db.endTransaction();
 //		db.setTransactionSuccessful();

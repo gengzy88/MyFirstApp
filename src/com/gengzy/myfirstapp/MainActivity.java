@@ -62,24 +62,23 @@ public class MainActivity extends Activity {
     }
 
     public void onClickMsg(View v) {
-    	int pos = m_ListView.getPositionForView(v);
-    	SQLiteDatabase db = MyDatabaseHelper.getMyDatabaseHelper(this).getWritableDatabase();
-    	TextView textView = (TextView)m_ListView.findFocus().findViewById(R.id.textView3);
-    	String string = (String) textView.getText();
-    	String sqlString = "delete from " + MyDatabaseHelper.MYTABLENAME + " where _id = " + string;
-//    	db.beginTransaction();
-    	db.delete(MyDatabaseHelper.MYTABLENAME, "_id = " + string, null);
-//   	db.rawQuery(sqlString, null);
-//    	db.endTransaction();
-//    	db.setTransactionSuccessful();
-    	MyDatabaseHelper.getMyDatabaseHelper(this).close();
-//    	MyDatabaseHelper.getMyDatabaseHelper(this).notifyAll();
+//    	int pos = m_ListView.getPositionForView(v);
+//    	SQLiteDatabase db = MyDatabaseHelper.getMyDatabaseHelper(this).getWritableDatabase();
+//    	TextView textView = (TextView)m_ListView.findFocus().findViewById(R.id.textView3);
+//    	String string = (String) textView.getText();
+//    	String sqlString = "delete from " + MyDatabaseHelper.MYTABLENAME + " where _id = " + string;
+//    	db.delete(MyDatabaseHelper.MYTABLENAME, "_id = " + string, null);
+//    	MyDatabaseHelper.getMyDatabaseHelper(this).close();
+
     	Intent intent = getIntent();
     	intent.setClass(this, MyService.class);
     	finish();
     	startService(intent);
+    	Intent surfaceIntent = new Intent();
+    	surfaceIntent.setClass(this, MySurfaceActivity.class);
+    	startActivity(surfaceIntent);
     	
-    	
+    	//m_ListView.postInvalidate();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

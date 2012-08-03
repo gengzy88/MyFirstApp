@@ -18,9 +18,18 @@ import android.widget.Toast;
 
 public class MyService extends Service{
 
-	HandlerThread m_thread;
-	MyServiceHandler m_handler;
-	BroadcastReceiver m_broadcastReceiver;
+	private HandlerThread m_thread;
+	private static MyServiceHandler m_handler;
+	private BroadcastReceiver m_broadcastReceiver;
+	
+	public static final int RECV_MSG = 1;
+	
+	static{
+		m_handler = null;
+	}
+	public final static Handler getMyServiceHandler(){
+		return m_handler;
+	}
 	
 	public final static class MyServiceHandler extends Handler{
 		WeakReference<MyService> m_servicReference;
@@ -36,8 +45,16 @@ public class MyService extends Service{
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
 			synchronized (this) {
-				SystemClock.sleep(5000);
-				Toast.makeText(m_servicReference.get(), "Hello", Toast.LENGTH_SHORT).show();
+				switch (msg.what) {
+				case RECV_MSG:
+					
+					break;
+
+				default:
+					break;
+				}
+//				SystemClock.sleep(5000);
+//				Toast.makeText(m_servicReference.get(), "Hello", Toast.LENGTH_SHORT).show();
 			}
 			super.handleMessage(msg);
 		}
