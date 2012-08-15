@@ -4,9 +4,17 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+import javax.microedition.khronos.opengles.GL10;
+
+import android.opengl.GLU;
+
 public class MyCube {
 	private FloatBuffer floatBuffer;
+	private float xRot;
+	private float yRot;
 	public MyCube(){
+		xRot = 1.0f;
+		yRot = 0.5f;
 		float box[] = new float[] {
             -0.5f, -0.5f,  0.5f,
              0.5f, -0.5f,  0.5f,
@@ -44,6 +52,33 @@ public class MyCube {
 		floatBuffer = byteBuffer.asFloatBuffer();
 		floatBuffer.put(box);
 		floatBuffer.position(0);
+	}
+	
+	public void onDraw(GL10 gl){
+		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		GLU.gluLookAt(gl, 0, 0, 3, 0, 0, 0, 0, 1, 0);//设置视点和模型中心位置
+		
+		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, floatBuffer);
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+
+		gl.glRotatef(xRot, 1, 0, 1);
+//		gl.glRotatef(yRot, 0, 1, 0);
+		
+		gl.glColor4f(1.0f, 0, 0, 1.0f);
+		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
+		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 4, 4);
+		
+		gl.glColor4f(0f, 1.0f, 0, 1.0f);
+		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 8, 4);
+		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 12, 4);
+		
+		gl.glColor4f(0.0f, 0, 1.0f, 1.0f);
+		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 16, 4);
+		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 20, 4);
+		
+		xRot += 1.0f;
+		yRot += 1.0f;
 	}
 
 }
