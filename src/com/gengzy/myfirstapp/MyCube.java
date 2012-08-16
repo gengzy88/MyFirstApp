@@ -6,12 +6,23 @@ import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.R.color;
+import android.R.integer;
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.opengl.GLU;
+import android.opengl.GLUtils;
+import android.provider.MediaStore.Images;
 
 public class MyCube {
 	private FloatBuffer floatBuffer;
+	private FloatBuffer colorBuffer;
 	private float xRot;
 	private float yRot;
+	private int textures[];
+	private Bitmap images;
 	public MyCube(){
 		xRot = 1.0f;
 		yRot = 0.5f;
@@ -47,35 +58,103 @@ public class MyCube {
              0.5f, -0.5f, -0.5f,
 		};
 		
+		float colorArray[] = new float[]{
+			1.0f, 0, 0, 1.0f,
+			0, 1.0f, 0, 1.0f,
+			1.0f, 1.0f, 1.0f, 1.0f,
+			0, 0, 1.0f, 1.0f,
+			
+			1.0f, 0, 0, 1.0f,
+			0, 1.0f, 0, 1.0f,
+			1.0f, 1.0f, 1.0f, 1.0f,
+			0, 0, 1.0f, 1.0f,
+			
+			1.0f, 0, 0, 1.0f,
+			0, 1.0f, 0, 1.0f,
+			1.0f, 1.0f, 1.0f, 1.0f,
+			0, 0, 1.0f, 1.0f,
+			
+			1.0f, 0, 0, 1.0f,
+			0, 1.0f, 0, 1.0f,
+			1.0f, 1.0f, 1.0f, 1.0f,
+			0, 0, 1.0f, 1.0f,
+			
+			1.0f, 0, 0, 1.0f,
+			0, 1.0f, 0, 1.0f,
+			1.0f, 1.0f, 1.0f, 1.0f,
+			0, 0, 1.0f, 1.0f,
+			
+			1.0f, 0, 0, 1.0f,
+			0, 1.0f, 0, 1.0f,
+			1.0f, 1.0f, 1.0f, 1.0f,
+			0, 0, 1.0f, 1.0f,
+		};
 		ByteBuffer byteBuffer = ByteBuffer.allocateDirect(box.length*4);
 		byteBuffer.order(ByteOrder.nativeOrder());
 		floatBuffer = byteBuffer.asFloatBuffer();
 		floatBuffer.put(box);
 		floatBuffer.position(0);
+		
+		ByteBuffer colorByteBuffer = ByteBuffer.allocateDirect(colorArray.length*4);
+		colorByteBuffer.order(ByteOrder.nativeOrder());
+		colorBuffer = colorByteBuffer.asFloatBuffer();
+		colorBuffer.put(colorArray);
+		colorBuffer.position(0);
+		
+		textures = new int[6];
+	}
+	
+	public void loadImage(Context context){
+		images = BitmapFactory.decodeResource(context.getResources(), R.drawable.cloud);
+		
+	}
+	
+	public void loadTexture(GL10 gl){
+		gl.glGenTextures(6, textures, 0);
+		
+		for (int i = 0; i < textures.length; i++) {
+			gl.glBindTexture(GL10.GL_TEXTURE, textures[i]);
+			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
+			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+			GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, images, 0);
+			images.recycle();
+		}
 	}
 	
 	public void onDraw(GL10 gl){
+		
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		GLU.gluLookAt(gl, 0, 0, 3, 0, 0, 0, 0, 1, 0);//设置视点和模型中心位置
+		gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
 		
-		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, floatBuffer);
-		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-
-		gl.glRotatef(xRot, 1, 0, 1);
-//		gl.glRotatef(yRot, 0, 1, 0);
+		for (int i = 0; i < textures.length; i++) {
+			gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[i]);
+//			gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, 4, GL10.GL_UNSIGNED_BYTE, images.);
+		}
 		
-		gl.glColor4f(1.0f, 0, 0, 1.0f);
-		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
-		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 4, 4);
-		
-		gl.glColor4f(0f, 1.0f, 0, 1.0f);
-		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 8, 4);
-		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 12, 4);
-		
-		gl.glColor4f(0.0f, 0, 1.0f, 1.0f);
-		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 16, 4);
-		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 20, 4);
+//		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, floatBuffer);
+//		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+//
+//		gl.glRotatef(xRot, 1, 0, 1);
+////		gl.glRotatef(yRot, 0, 1, 0);
+//		
+////		gl.glColor4f(1.0f, 0, 0, 1.0f);
+//		gl.glColorPointer(4, GL10.GL_FLOAT, 0, colorBuffer);
+//		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
+//		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 4, 4);
+//		
+////		gl.glColor4f(0f, 1.0f, 0, 1.0f);
+////		gl.glColorPointer(4, GL10.GL_FLOAT, 0, colorBuffer);
+//		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 8, 4);
+//		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 12, 4);
+//		
+////		gl.glColor4f(0.0f, 0, 1.0f, 1.0f);
+////		gl.glColorPointer(4, GL10.GL_FLOAT, 0, colorBuffer);
+//		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 16, 4);
+//		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 20, 4);
+//		
+//		gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
 		
 		xRot += 1.0f;
 		yRot += 1.0f;
